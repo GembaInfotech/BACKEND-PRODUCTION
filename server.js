@@ -8,10 +8,6 @@ const morgan = require('morgan');
 const winston = require('./config/winston');
 const helmet = require('helmet');
 
-// Models Imports
-const User = require('./api/models/userModel');
-const Task = require('./api/models/taskModel');
-const Code = require('./api/models/codeModel');
 
 // Init Express
 const app = express();
@@ -68,9 +64,13 @@ app.use(cors());
 const adminRoutes = require('./api/routes/adminRoutes');
 const authRoutes = require('./api/routes/authRoutes');
 const taskRoutes = require('./api/routes/todoListRoutes');
+const parkingRoutes = require('./api/routes/parkingRoutes');
+
 adminRoutes(app);
 authRoutes(app);
+parkingRoutes(app);
 taskRoutes(app);
+
 
 // 404 Handling
 app.use((req, res) => {
