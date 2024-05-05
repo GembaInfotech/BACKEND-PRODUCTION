@@ -25,7 +25,7 @@ const validatePassword = (password) => {
 const checkEmailExists = (email) => {
   const submittedEmail = email;
   return UserModel.find({ email: submittedEmail }).then((result) => {
-    if (result && result.length > 0) {
+    if (result && result?.length > 0) {
       return false;
     } else {
       return true;

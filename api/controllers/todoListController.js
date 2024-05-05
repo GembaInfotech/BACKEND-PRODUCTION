@@ -72,9 +72,8 @@ exports.create_new_task = async (req, res) => {
  * PARAMS: /:uniqueId /:token
  */
 exports.read_all_user_tasks = async (req, res) => {
-  const { uniqueId, token } = req.params;
-  console.log(uniqueId, token)
-  if (!uniqueId || !token) {
+
+  if (!req.user ) {
     res.status(400).json({
       success: false,
       message: 'Missing request data',
@@ -82,12 +81,11 @@ exports.read_all_user_tasks = async (req, res) => {
     });
   } else {
     try {
-      let tokenValid = await checkToken(token);
-      let userExists = await checkUserExists(uniqueId);
-      console.log(tokenValid, userExists)
-      if (tokenValid.success && userExists) {
+      console.log(req.user)
+      let userExists = await checkUserExists(req.user);
+      if (userExists) {
         // TODO: Call cache here?
-        Task.find({ user: { $all: uniqueId } }, (err, tasks) => {
+        Task.find({ user: { $all: req.user } }, (err, tasks) => {
           if (err) {
             return res.status(400).json({
               success: false,
@@ -104,7 +102,7 @@ exports.read_all_user_tasks = async (req, res) => {
       } else {
         res.status(400).json({
           success: false,
-          message: `Couldn't find user or token invalid.`,
+          message: `Couldn't find user or token invad.`,
           data: null,
         });
       }

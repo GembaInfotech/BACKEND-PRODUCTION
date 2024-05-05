@@ -7,11 +7,30 @@ const cors = require('cors');
 const morgan = require('morgan');
 const winston = require('./config/winston');
 const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
+
 
 
 // Init Express
 const app = express();
 require('dotenv').config();
+
+
+
+
+app.use(session({
+  secret: `${process.env.SESSION_SECRET}`, // Replace with a strong secret key
+  resave: false,
+  saveUninitialized: false,
+  page:null,
+  cookie: {
+    secure: true, // Use HTTPS for secure cookies
+    httpOnly: true, // Prevent client-side access to cookies
+    maxAge: 60 * 60 // 1 day expiration
+  },
+ // store: new MongoStore({ mongooseConnection: db }), // Use MongoDB for session storage
+}));
 
 // DB Connection
 mongoose.Promise = global.Promise;
@@ -42,6 +61,7 @@ mongoose.connect(
 // Server Config
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 app.use(morgan('combined', { stream: winston.stream }));
 app.use(helmet());
 
@@ -60,14 +80,39 @@ app.use((req, res, next) => {
 });
 app.use(cors());
 
+
+
+
+
+const requireAuth = (req, res, next) => {
+  
+    if(!req.session.page)
+       return res.json({"d":"no"})
+  next();
+};
+
+app.get('/profile', requireAuth, (req, res) => {
+  console.log(req.session.page)
+  res.status(200).json({ message: 'Welcome to your profile', data:req.session.page });
+});
+app.post('/logout', requireAuth, (req, res) => {
+  // Destroy session
+  req.session.destroy(err => {
+    if (err) {
+      console.error('Error destroying session:', err);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+    res.status(200).json({ message: 'Logout successful' });
+  });
+});
 // Routes Definitions
 const adminRoutes = require('./api/routes/adminRoutes');
-const authRoutes = require('./api/routes/authRoutes');
+const userRoutes = require('./api/routes/userRoutes');
 const taskRoutes = require('./api/routes/todoListRoutes');
 const parkingRoutes = require('./api/routes/parkingRoutes');
 
 adminRoutes(app);
-authRoutes(app);
+userRoutes(app);
 parkingRoutes(app);
 taskRoutes(app);
 

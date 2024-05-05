@@ -146,7 +146,7 @@ const ParkingSchema = new Schema(
     vendor_id:{
         type:String
     },
-    gaurd_id:[
+    guard_id:[
         {
             type:String
         }
