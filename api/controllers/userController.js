@@ -16,6 +16,7 @@ exports.authMiddleWare = async (req, res, next) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
 exports.viewUser = async (req, res, next) => {
   try {
     await viewUser(req, res, next);

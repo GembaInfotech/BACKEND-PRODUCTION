@@ -18,7 +18,7 @@ exports.validateParking = parkingFields.map(field => {
 
   }
   else if (field === 'pincode') {
-    return body(field).notEmpty().withMessage("Empty").isLength({ min: 6 }).withMessage(`${field.replace('_', ' ')} must be less than 10`);
+    return body(field).notEmpty().withMessage("Empty").isInt().withMessage("Pincode must be an Numeric Value").isLength({ min: 6 }).withMessage(`${field.replace('_', ' ')} must be greater then 6 digits`);
 
   }
   else if (field === 'description') {

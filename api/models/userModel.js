@@ -115,8 +115,18 @@ const UserSchema = new Schema(
       type: String,
       required: false,
     },
+    tokens:[{
+      token:{
+        type:String
+      },
+      reftoken:{
+    type:String
+      }
+    }]
   },
   { timestamps: true }
 );
 
+
+UserSchema.methods.generateAuthToken = async function
 module.exports = mongoose.model('UserModel', UserSchema);

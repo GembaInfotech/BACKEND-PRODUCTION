@@ -81,30 +81,14 @@ app.use((req, res, next) => {
 app.use(cors());
 
 
+app.get('/',(req,res)=>{
+  res.send("success");
+})
 
 
 
-const requireAuth = (req, res, next) => {
-  
-    if(!req.session.page)
-       return res.json({"d":"no"})
-  next();
-};
 
-app.get('/profile', requireAuth, (req, res) => {
-  console.log(req.session.page)
-  res.status(200).json({ message: 'Welcome to your profile', data:req.session.page });
-});
-app.post('/logout', requireAuth, (req, res) => {
-  // Destroy session
-  req.session.destroy(err => {
-    if (err) {
-      console.error('Error destroying session:', err);
-      return res.status(500).json({ message: 'Internal server error' });
-    }
-    res.status(200).json({ message: 'Logout successful' });
-  });
-});
+
 // Routes Definitions
 const adminRoutes = require('./api/routes/adminRoutes');
 const userRoutes = require('./api/routes/userRoutes');

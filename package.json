@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/benAkehurst/nodejs-api-server#readme",
   "devDependencies": {
+    "autocannon": "^7.15.0",
     "nodemon": "^2.0.4"
   },
   "dependencies": {
