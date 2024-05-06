@@ -2,8 +2,8 @@
 module.exports = (app) => {
   const authController = require('../controllers/userController');
   app.route('/api/v1/auth/login-user').post(authController.login_user);
-
-  app.route('/api/v1/auth/logout-user').post(authController.logout_user);
+  
+  app.route('/api/v1/auth/logout-user').get(authController.authMiddleWare, authController.logout_user);
 
   app.route('/api/v1/auth/create-new-user').post(authController.create_new_user);
 

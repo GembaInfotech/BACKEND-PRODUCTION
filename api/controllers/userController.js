@@ -6,6 +6,7 @@ const { changePassword, verifyNewPassword, getResetCode } = require('../handlers
 const { loginUser } = require('../handlers/userHandler/loginUser');
 const { isAuthorized } = require('../../middlewares/authMiddleware/isAuthorized');
 const { viewUser } = require('../handlers/userHandler/viewUser');
+const { logoutUser } = require('../handlers/userHandler/logoutUser');
 
 
 exports.authMiddleWare = async (req, res, next) => {
@@ -34,6 +35,16 @@ exports.login_user = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 }
+
+exports.logout_user = async (req, res, next) => {
+  try {
+    await logoutUser(req, res, next);
+  }
+  catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+}
+
 
 exports.create_new_user = async (req, res) => {
   try {

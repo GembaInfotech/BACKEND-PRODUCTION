@@ -156,6 +156,8 @@ exports.createUser = async (req, res) => {
         res.redirect(redirectPath);
       }
     } catch (err) {
-      res.status(500).send("Token Expired");
+      res.status(500).json({"message":"Token Expired",
+                         "success":false
+      });
     }
   };  
