@@ -1,6 +1,10 @@
 'use strict';
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const jwt = require('jsonwebtoken');
+const { format } = require('date-fns');
+
+
 
 const UserSchema = new Schema(
   {
@@ -116,11 +120,12 @@ const UserSchema = new Schema(
       required: false,
     },
     tokens:[{
-      token:{
-        type:String
-      },
+     
       reftoken:{
     type:String
+      },
+      timeStamp:{
+        type:String
       }
     }]
   },
@@ -128,5 +133,38 @@ const UserSchema = new Schema(
 );
 
 
-UserSchema.methods.generateAuthToken = async function
+UserSchema.methods.generateRefreshToken = async function(){
+  try{
+   let reftoken = jwt.sign(
+      { username: this.uniqueId },
+      process.env.JWT_SECRET,
+      {
+        // TODO: SET JWT TOKEN DURATION HERE
+        expiresIn:  '1h',
+      }
+    );
+    let timeStamp =  format(new Date(), 'Pp');
+    this.tokens= this.tokens.concat({reftoken, timeStamp});
+    await this.save();
+    return reftoken;
+  } catch(err){
+    console.log("Error")
+  }
+}
+UserSchema.methods.generateAuthToken = async function(){
+  try{
+   let token = jwt.sign(
+      { username: this.uniqueId },
+      process.env.JWT_SECRET,
+      {
+        // TODO: SET JWT TOKEN DURATION HERE
+        expiresIn:  '10m',
+      }
+    );
+  
+    return token;
+  } catch(err){
+    console.log("Error")
+  }
+}
 module.exports = mongoose.model('UserModel', UserSchema);
