@@ -110,11 +110,13 @@ const adminRoutes = require('./api/routes/adminRoutes');
 const userRoutes = require('./api/routes/userRoutes');
 const taskRoutes = require('./api/routes/todoListRoutes');
 const parkingRoutes = require('./api/routes/parkingRoutes');
+const vehicleRoutes = require('./api/routes/vehicleRoutes');
 
 adminRoutes(app);
 userRoutes(app);
 parkingRoutes(app);
 taskRoutes(app);
+vehicleRoutes(app);
 
 
 // 404 Handling
